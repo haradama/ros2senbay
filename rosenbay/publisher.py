@@ -1,11 +1,8 @@
 import os
 import sys
-import json
-import numpy as np
 import cv2
 import zbar
 import zbar.misc
-from PIL import Image
 
 import rclpy
 from rclpy.node import Node
