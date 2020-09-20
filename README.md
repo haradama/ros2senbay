@@ -14,9 +14,9 @@ You need to install `ROS2 Dashing Diademata`, `Zbar` and some python modules to 
 #### ROS2 Dashing Diademata
 ```
 $ curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-$ sudo apt install ros-dashing-desktop
-$ sudo apt install python3-colcon-common-extensions
-$ sudo apt install python3-argcomplete
+$ sudo apt install -y ros-dashing-desktop
+$ sudo apt install -y python3-colcon-common-extensions
+$ sudo apt install -y python3-argcomplete
 $ echo "source /opt/ros/dashing/setup.bash" >> ~/.bashrc
 ```
 
