@@ -1,13 +1,64 @@
 # ros2senbay
 ros2senbay is a movie player that serves senbay-data via ros2 message.
 
+<!-- ## Architecture
+```plantuml
+@startuml
+
+package ros2senbay {
+    namespace core {
+        class BaseX {
+            +PN: int
+            +REVERSE_TABLE: list
+            +TABLE: list
+            +decodeDoubleValue()
+            +decodeLongValue()
+            +encodeDoubleValue()
+            +encodeLongValue()
+        }
+
+        class SenbayFormat {
+            +PN: int
+            +RESERVED_KEYS: dict
+            +basex: BaseX
+            +decode()
+            +encode()
+            +getReservedOriginalKey()
+            +getReservedShortKey()
+        }
+
+        class SenbayData {
+            +PN: int
+            +SF: SenbayFormat
+            +senbayData: dict
+            +add_number()
+            +add_text()
+            +clear()
+            +decode()
+            +encode()
+        }
+
+        BaseX -* SenbayFormat: baseX
+        SenbayFormat -* SenbayData: SF
+    }
+
+    namespace generator {
+        class generator {
+
+        }
+    }
+}
+
+@enduml
+``` -->
+
 ## Enviroment
 ros2senbay tested on
 - Ubuntu 18.04 LTS
 - ROS2 Dashing Diademata
 
 ## Install
-### Install dependance libraries
+### Installing dependencies
 
 You need to install `ROS2 Dashing Diademata`, `Zbar` and some python modules to your enviroment.
 
@@ -25,14 +76,37 @@ $ echo "source /opt/ros/dashing/setup.bash" >> ~/.bashrc
 $ sudo apt install -y zbar-tools
 ```
 #### Python modules
-- opencv-python
-- zbar
-
-You can install following dependences via `pip`.
+If you have not installed `python3` yet, please follow the instructions below.
 
 ```
-$ pip install opencv-python
-$ pip install zbar
+$ sudo apt install -y python3
+$ sudo apt install -y python3-pip
+```
+
+You can install following dependences via `pip3`.
+
+- opencv-python
+- zbar
+- prestring
+
+```
+$ pip3 install opencv-python
+$ pip3 install zbar
+$ pip3 install prestring
+```
+
+### Build from source
+
+```
+$ mkdir -p ~/ros2senbay_ws/src
+$ cd ~/ros2senbay_ws/src
+```
+
+Clone this repository and build
+
+```
+$ git clone https://github.com/haradama/ros2senbay.git
+$ colcon build ros2senbay [--merge-install]
 ```
 
 ## Usage

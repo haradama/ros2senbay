@@ -6,12 +6,11 @@ import zbar.misc
 
 import rclpy
 from rclpy.node import Node
-
 from std_msgs.msg import Float32
 
 import rosenbay
 
-class RosenbayPublisher(Node):
+class Ros2senbayPublisher(Node):
     def __init__(self):
         super().__init__('rosenbay_publisher')
         self.pub_lst = {
@@ -24,9 +23,10 @@ class RosenbayPublisher(Node):
             "INTAKE_TEMP":              self.create_publisher(Float32, "INTAKE_TEMP", 10)
         }
 
+        self.title = "ros2senbay"
         self.fps = 10
         self.timer = self.create_timer(1 / self.fps, self.timer_callback)
-        infile = "video/video.m4v"
+        infile = "resource/video.m4v"
         filepath = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
             infile
@@ -34,8 +34,6 @@ class RosenbayPublisher(Node):
         self.cap = cv2.VideoCapture(filepath)
         self.scanner = zbar.Scanner()
         self.senbayData = rosenbay.SenbayData()
-
-        self.title = "rosenbay"
 
     def timer_callback(self):
         success, frame = self.cap.read()
