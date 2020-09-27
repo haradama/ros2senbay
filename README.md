@@ -1,56 +1,5 @@
 # ros2senbay
-ros2senbay is a movie player that serves senbay-data via ros2 message.
-
-<!-- ## Architecture
-```plantuml
-@startuml
-
-package ros2senbay {
-    namespace core {
-        class BaseX {
-            +PN: int
-            +REVERSE_TABLE: list
-            +TABLE: list
-            +decodeDoubleValue()
-            +decodeLongValue()
-            +encodeDoubleValue()
-            +encodeLongValue()
-        }
-
-        class SenbayFormat {
-            +PN: int
-            +RESERVED_KEYS: dict
-            +basex: BaseX
-            +decode()
-            +encode()
-            +getReservedOriginalKey()
-            +getReservedShortKey()
-        }
-
-        class SenbayData {
-            +PN: int
-            +SF: SenbayFormat
-            +senbayData: dict
-            +add_number()
-            +add_text()
-            +clear()
-            +decode()
-            +encode()
-        }
-
-        BaseX -* SenbayFormat: baseX
-        SenbayFormat -* SenbayData: SF
-    }
-
-    namespace generator {
-        class generator {
-
-        }
-    }
-}
-
-@enduml
-``` -->
+ros2senbay is a ros2 publisher generator that serves senbay-data via ros2 message.
 
 ## Enviroment
 ros2senbay tested on
@@ -86,13 +35,15 @@ $ sudo apt install -y python3-pip
 You can install following dependences via `pip3`.
 
 - opencv-python
-- zbar
+- zbar-py
 - prestring
+- tqdm
 
 ```
 $ pip3 install opencv-python
-$ pip3 install zbar
+$ pip3 install zbar-py
 $ pip3 install prestring
+$ pip3 install tqdm
 ```
 
 ### Build from source
@@ -109,10 +60,22 @@ $ git clone https://github.com/haradama/ros2senbay.git
 $ colcon build ros2senbay [--merge-install]
 ```
 
-## Usage
+### Build from Dockerfile
+```
+$ docker build -t ros2senbay:latest .
+```
 
-```sh
-$ ros run ros2senbay
+## Example
+This is a example of ros2senbay. The sensor-data is derived from vehicle via OBD-II.
+
+### Architecture
+
+![arch](./assets/arch.svg)
+
+### Usage
+
+```
+$ ros2 run ros2senbay
 ```
 ![example](./assets/capture.gif)
 

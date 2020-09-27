@@ -1,0 +1,3 @@
+include ros2senbay/resource/package.xml
+include ros2senbay/resource/setup.*
+include ros2senbay/resource/media/*

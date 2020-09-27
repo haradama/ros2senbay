@@ -1,3 +1,4 @@
 opencv-python
-zbar
+zbar-py
 prestring
+tqdm

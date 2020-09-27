@@ -12,7 +12,7 @@ import rosenbay
 
 class Ros2senbayPublisher(Node):
     def __init__(self):
-        super().__init__('rosenbay_publisher')
+        super().__init__("rosenbay_publisher")
         self.pub_lst = {
             "TIME":                     self.create_publisher(Float32, "TIME", 10),
             "RPM":                      self.create_publisher(Float32, "RPM", 10),
@@ -33,7 +33,7 @@ class Ros2senbayPublisher(Node):
         )
         self.cap = cv2.VideoCapture(filepath)
         self.scanner = zbar.Scanner()
-        self.senbayData = rosenbay.SenbayData()
+        self.senbayData = SenbayData()
 
     def timer_callback(self):
         success, frame = self.cap.read()
@@ -47,26 +47,21 @@ class Ros2senbayPublisher(Node):
                     msg = Float32()
                     msg.data = senbayDict[key]
                     self.pub_lst[key].publish(msg)
-                    self.get_logger().info("{0}: '{1}'".format(key, msg.data))
+                    self.get_logger().info("{0}: {1}".format(key, msg.data))
         
             cv2.imshow(self.title, frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord("q"):
                 cv2.destroyWindow(self.title)
                 sys.exit()
 
         else:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
-def main(args=None):
-    rclpy.init(args=args)
-
+if __name__ == "__main__":
+    rclpy.init()
     rosenbay_publisher = RosenbayPublisher()
 
     rclpy.spin(rosenbay_publisher)
 
     minimal_publisher.destroy_node()
     rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()

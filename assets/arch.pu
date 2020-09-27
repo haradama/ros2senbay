@@ -1,0 +1,95 @@
+@startuml
+
+package ros2senbay_example {
+    namespace senbay.core {
+        class BaseX {
+            +PN: int
+            +REVERSE_TABLE: list
+            +TABLE: list
+            +__init__() -> None
+            +decodeDoubleValue(sVal: str) -> None
+            +decodeLongValue(sVal: str) -> None
+            +encodeDoubleValue(dVal: float) -> str 
+            +encodeLongValue(lVal: int) -> str
+        }
+
+        class SenbayFormat {
+            +PN: int
+            +RESERVED_KEYS: dict
+            +basex: BaseX
+            +__init__() -> None
+            +decode(text: str) -> str
+            +encode(text: str) -> str
+            +getReservedOriginalKey(key: str) -> str
+            +getReservedShortKey(key: str) -> str
+        }
+
+        class SenbayData {
+            +PN: int
+            +SF: SenbayFormat
+            +senbayData: dict
+            +__init__() -> None
+            +add_number(key, value) -> None
+            +add_text(key, value) -> None
+            +clear() -> None
+            +decode(text: str) -> dict
+            +encode(compress: bool) -> str
+        }
+
+        BaseX -* SenbayFormat: baseX
+        SenbayFormat -* SenbayData: SF
+    }
+
+    namespace ros2senbay_publisher {
+        class SamplePublisher {
+            +title: str
+            +pub_lst: list
+            +fps: int
+            +timer: cap
+            +capture: cv2.VideoCapture
+            +scanner: zbar.Scanner
+            +senbayData: SenbayData
+            +__init__() -> None
+            +timer_callback() -> None
+        }
+    }
+
+    ros2senbay_publisher.SamplePublisher -* senbay.core.SenbayData
+}
+
+rectangle "Python Modules" {
+    namespace zbar {
+        class Scanner {
+            +scan() -> list
+        }
+    }
+
+    namespace cv2 {
+        class VideoCapture {
+            +read() -> (bool, )
+        }
+    }
+
+    package ROS2 {
+        namespace std_msgs.msg {
+            class Float32 {
+                +data
+            }
+        }
+
+        namespace rclpy.node {
+            class Node {
+                +create_timer()
+                +create_publisher()
+                +destroy_node() -> None
+            }
+        }
+    }
+}
+
+ros2senbay_publisher.SamplePublisher --|> rclpy.node.Node
+ros2senbay_publisher.SamplePublisher -* zbar.Scanner: scanner
+ros2senbay_publisher.SamplePublisher -* cv2.VideoCapture: capture
+ros2senbay_publisher.SamplePublisher -* std_msgs.msg.Float32
+
+@enduml
