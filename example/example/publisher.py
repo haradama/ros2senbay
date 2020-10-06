@@ -13,7 +13,7 @@ from . import SenbayData
 
 class Ros2senbayPublisher(Node):
     def __init__(self):
-        super().__init__("rosenbay_publisher")
+        super().__init__("ros2senbay_publisher")
         self.pub_lst = {
             "TIME":                     self.create_publisher(Float32, "TIME", 10),
             "RPM":                      self.create_publisher(Float32, "RPM", 10),
@@ -54,6 +54,8 @@ class Ros2senbayPublisher(Node):
             cv2.imshow(self.title, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 cv2.destroyWindow(self.title)
+                ros2senbay_publisher.destroy_node()
+                rclpy.shutdown()
                 sys.exit()
 
         else:
@@ -63,11 +65,7 @@ class Ros2senbayPublisher(Node):
 def main():
     rclpy.init()
     ros2senbay_publisher = Ros2senbayPublisher()
-
     rclpy.spin(ros2senbay_publisher)
-
-    ros2senbay_publisher.destroy_node()
-    rclpy.shutdown()
 
 
 if __name__ == "__main__":
