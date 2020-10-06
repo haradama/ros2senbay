@@ -8,7 +8,8 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float32
 
-import rosenbay
+from . import SenbayData
+
 
 class Ros2senbayPublisher(Node):
     def __init__(self):
@@ -42,13 +43,14 @@ class Ros2senbayPublisher(Node):
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             codes = self.scanner.scan(gray)
             if codes != None and len(codes) > 0:
-                senbayDict = self.senbayData.decode(str(codes[0].data.decode("utf-8")))
+                senbayDict = self.senbayData.decode(
+                    str(codes[0].data.decode("utf-8")))
                 for key, pub in self.pub_lst.items():
                     msg = Float32()
                     msg.data = senbayDict[key]
-                    self.pub_lst[key].publish(msg)
+                    pub.publish(msg)
                     self.get_logger().info("{0}: {1}".format(key, msg.data))
-        
+
             cv2.imshow(self.title, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 cv2.destroyWindow(self.title)
@@ -57,11 +59,16 @@ class Ros2senbayPublisher(Node):
         else:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
 
-if __name__ == "__main__":
+
+def main():
     rclpy.init()
-    rosenbay_publisher = RosenbayPublisher()
+    ros2senbay_publisher = Ros2senbayPublisher()
 
-    rclpy.spin(rosenbay_publisher)
+    rclpy.spin(ros2senbay_publisher)
 
-    minimal_publisher.destroy_node()
+    ros2senbay_publisher.destroy_node()
     rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()

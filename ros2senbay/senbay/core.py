@@ -106,7 +106,7 @@ class BaseX:
         49   -> 10進数表記の1 (ascii文字)
         '''
         muString = ""
-        for number, place in enumerate(places):
+        for _, place in enumerate(places):
             # https://python.civic-apps.com/char-ord/
             # print(place);
             muString = chr(place) + muString
@@ -154,7 +154,7 @@ class BaseX:
         # ゼロのカウント
         zeros = ""
         aZero = self.encodeLongValue(0)
-        for i, aVal in enumerate(vals[1]):
+        for _, aVal in enumerate(vals[1]):
             # print(aVal);
             if aVal == "0":
                 zeros = zeros + aZero

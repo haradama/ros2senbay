@@ -9,6 +9,7 @@ from prestring.python import PythonModule
 from ros2senbay.senbay.core import SenbayData
 import argparse
 
+
 class VideoReader:
     def __init__(self, infile):
         self.capture = cv2.VideoCapture(infile)
@@ -19,13 +20,14 @@ class VideoReader:
         self.senbayDict = {}
 
     def parse(self):
-        for i in tqdm(range(self.frame_num)):
+        for _ in tqdm(range(self.frame_num)):
             success, frame = self.capture.read()
             if success:
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 codes = self.scanner.scan(gray)
                 if codes != None and len(codes) > 0:
-                    senbayDict = self.senbayData.decode(str(codes[0].data.decode("utf-8")))
+                    senbayDict = self.senbayData.decode(
+                        str(codes[0].data.decode("utf-8")))
                     for key, value in senbayDict.items():
                         if key not in self.senbayDict:
                             if isinstance(value, int):
@@ -34,6 +36,7 @@ class VideoReader:
                                 self.senbayDict[key] = "Float32"
                             else:
                                 self.senbayDict[key] = "String"
+
 
 class Generator:
     def __init__(self, infile, outdir):
@@ -57,23 +60,28 @@ class Generator:
         for msgType in set(senbayDict.values()):
             m.from_('std_msgs.msg', msgType)
         m.from_('senbay.core', 'SenbayData')
-        
+        m.stmt('')
+
         with m.class_('Ros2senbayPublisher', 'Node'):
             with m.def_('__init__', 'self'):
                 m.stmt("super().__init__('ros2senbay_publisher')")
 
                 m.stmt('self.pub_lst = {')
                 for key, value in senbayDict.items():
-                    m.stmt('"{0}": self.create_publisher({0}, "{1}", 10),'.format(key, value))
+                    m.stmt(
+                        '"{0}": self.create_publisher({0}, "{1}", 10),'.format(key, value))
                 m.stmt('}')
 
                 m.stmt('self.title = "Ros2senbay Publisher"')
 
                 m.stmt('self.fps = {0}'.format(self.video_reader.fps))
 
-                m.stmt('self.timer = self.create_timer(1 / self.fps, self.timer_callback)')
-                m.stmt('infile = "media/{0}"'.format(os.path.basename(self.infile)))
-                m.stmt('filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), infile')
+                m.stmt(
+                    'self.timer = self.create_timer(1 / self.fps, self.timer_callback)')
+                m.stmt(
+                    'infile = "media/{0}"'.format(os.path.basename(self.infile)))
+                m.stmt(
+                    'filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), infile')
                 m.stmt('self.capture = cv2.VideoCapture(filepath)')
                 m.stmt('self.scanner = zbar.Scanner()')
                 m.stmt('self.senbayData = SenbayData()')
@@ -86,13 +94,15 @@ class Generator:
                     m.stmt('codes = self.scanner.scan(gray)')
 
                     with m.if_('codes != None and len(codes) > 0'):
-                        m.stmt('senbayDict = self.senbayData.decode(str(codes[0].data.decode("utf-8")))')
+                        m.stmt(
+                            'senbayDict = self.senbayData.decode(str(codes[0].data.decode("utf-8")))')
 
                         with m.for_('key, pub in self.pub_lst.items()'):
                             m.stmt('msg = Float32()')
                             m.stmt('msg.data = senbayDict[key]')
                             m.stmt('self.pub_lst[key].publish(msg)')
-                            m.stmt('self.get_logger().info("{0}: \'{1}\'".format(key, msg.data))')
+                            m.stmt(
+                                'self.get_logger().info("{0}: \'{1}\'".format(key, msg.data))')
                     m.stmt('cv2.imshow(self.title, frame)')
 
                     with m.if_("cv2.waitKey(1) & 0xFF == ord('q')"):
@@ -112,6 +122,7 @@ class Generator:
         with open("{0}/publisher.py".format(self.outdir), "w") as fw:
             fw.write(m.__str__())
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--infile", help="Input file name")
@@ -123,10 +134,12 @@ def main():
     resource_path = "{0}/resource".format(current_dir)
     shutil.copytree(resource_path, workdir)
     shutil.copytree(current_dir + "/senbay", workdir + "/senbay")
-    shutil.copyfile(infile, "{0}/media/{1}".format(workdir, os.path.basename(infile)))
+    shutil.copyfile(
+        infile, "{0}/media/{1}".format(workdir, os.path.basename(infile)))
 
     generator = Generator(infile, workdir)
     generator.generate()
+
 
 if __name__ == "__main__":
     main()

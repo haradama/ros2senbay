@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'ros2senbay'
+package_name = 'example'
 
 setup(
     name=package_name,
@@ -15,14 +15,13 @@ setup(
         'setuptools'
     ],
     zip_safe=True,
-    maintainer='parallels',
-    maintainer_email='parallels@todo.todo',
+    maintainer='Masafumi Harada',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'play = ros2senbay.publisher:main',
+            'run = ros2senbay.publisher:main',
         ],
     },
 )

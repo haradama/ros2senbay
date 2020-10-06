@@ -3,15 +3,15 @@ ros2senbay is a ros2 publisher generator that serves senbay-data via ros2 messag
 
 ## Enviroment
 ros2senbay tested on
-- Ubuntu 18.04 LTS
-- ROS2 Dashing Diademata
+- Ubuntu 18.04.5 LTS (Bionic Beaver)
+- ROS2 dashing
 
 ## Install
 ### Installing dependencies
 
-You need to install `ROS2 Dashing Diademata`, `Zbar` and some python modules to your enviroment.
+You need to install `ROS2 dashing`, `Zbar` and some python modules to your enviroment.
 
-#### ROS2 Dashing Diademata
+#### ROS2 dashing
 ```
 $ curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 $ sudo apt install -y ros-dashing-desktop
@@ -34,12 +34,16 @@ $ sudo apt install -y python3-pip
 
 You can install following dependences via `pip3`.
 
+- scikit-build
+- numpy
 - opencv-python
 - zbar-py
 - prestring
 - tqdm
 
 ```
+$ pip3 install scikit-build
+$ pip3 install numpy
 $ pip3 install opencv-python
 $ pip3 install zbar-py
 $ pip3 install prestring
@@ -60,11 +64,6 @@ $ git clone https://github.com/haradama/ros2senbay.git
 $ colcon build ros2senbay [--merge-install]
 ```
 
-### Build from Dockerfile
-```
-$ docker build -t ros2senbay:latest .
-```
-
 ## Example
 This is a example of ros2senbay. The sensor-data is derived from vehicle via OBD-II.
 
@@ -75,7 +74,10 @@ This is a example of ros2senbay. The sensor-data is derived from vehicle via OBD
 ### Usage
 
 ```
-$ ros2 run ros2senbay
+$ cd ./example
+$ colcon build --packages-select ros2senbay_publisher --symlink-install
+$ . install/setup.bash
+$ ros2 run ros2senbay_publisher play
 ```
 ![example](./assets/capture.gif)
 
