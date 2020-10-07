@@ -1,6 +1,8 @@
 *.m4v
 *.mp4
 
+*.icloud
+
 # Created by https://www.toptal.com/developers/gitignore/api/macos,ros,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,ros,python
 
